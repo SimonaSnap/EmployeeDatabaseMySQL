@@ -1,7 +1,9 @@
 const inquirer = require('inquirer');
 const mysql2 = require("mysql2");
 require("console.table");
-const { newDep } = require("./deparments")
+const { viewDep, newDep } = require("./deparments")
+const allEmployees = require("./employees")
+const { allRoles, newRole } = require("./roles")
 require("dotenv").config()
 
 //console.table([{ name: "andrew", age: "26" }, { name: "simona", age: "23" }])
@@ -40,29 +42,31 @@ function menu()
         {
             if (response.menu === "View All Employees")
             {
-                db.query("SELECT depName AS department FROM department", function (err, results)
-                {
-                    console.log(results);
-                    menu();
-                })
-
+                allEmployees(db, menu);
             }
             else if (response.menu === "View All Departments")
             {
-                db.query("SELECT depName AS department FROM department", function (err, results)
-                {
-                    console.log(results);
-                    menu();
-                })
-
+                viewDep(db, menu)
             }
+            else if (response.menu === "View All Roles")
+            {
+                allRoles(db, menu)
+            }
+            // else if (response.menu === "Add Employee")
+            // {
+            //     newDep(db, menu);
+            // }
             else if (response.menu === "Add Department")
             {
-                newDep();
+                newDep(db, menu);
             }
-
+            else if (response.menu === "Add Role")
+            {
+                newRole(db, menu);
+            }
+            else if (response.menu === "Done")
+            {
+                process.exit();
+            }
         })
 };
-
-
-module.exports = db;

@@ -2,9 +2,21 @@ const inquirer = require('inquirer');
 const mysql2 = require("mysql2");
 require("console.table");
 require("dotenv").config()
-const db = require("./index")
 
-function newDep()
+function viewDep(db, cb)
+{
+    db.query("SELECT id, depName AS department FROM department", function (err, results)
+    {
+        if (err)
+        {
+            console.log(err)
+        }
+        console.table(results);
+        cb();
+    })
+}
+
+function newDep(db, cb)
 {
     inquirer
         .prompt(
@@ -25,10 +37,10 @@ function newDep()
                         console.log(err)
                     }
                     console.log(results);
-                    menu();
+                    cb();
                 })
             }
         )
 };
 
-module.exports = { newDep }
+module.exports = { viewDep, newDep };
