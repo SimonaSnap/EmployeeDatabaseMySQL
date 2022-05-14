@@ -32,17 +32,6 @@ const db = mysql2.createConnection(
     //console.log("Connected to company_db database")
 );
 
-const listDep = [];
-db.query("SELECT depName FROM department", (err, results) =>
-{
-    results.forEach((row) =>
-    {
-        listDep.push(row.name);
-
-    });
-});
-
-
 
 function newRole(db, cb)
 {
@@ -53,57 +42,60 @@ function newRole(db, cb)
         {
             console.log(err);
         }
-        console.log(results);
         results.forEach((object) =>
         {
-            listDep.push(object);
-            console.log(listDep);
+            listDep.push(object.depName);
         })
 
-        return listDep;
-        // inquirer
-        //     .prompt([
-        //         {
-        //             type: "input",
-        //             message: "what is the role title?",
-        //             name: "title"
-        //         },
-        //         {
-        //             type: "input",
-        //             message: "what is the salary of this role?",
-        //             name: "salary"
-        //         },
-        //         {
-        //             type: "list",
-        //             message: "What department does this role belong to?",
-        //             name: "depart",
-        //             choices: listDep,
-        //         }
-        //     ]).then(
-        //         (data) =>
-        //         {
-        //             db.query(`SELECT id FROM department WHERE name = ?`, data.depart, (err, results) =>
-        //             {
-        //                 if (err)
-        //                 {
-        //                     console.log(err);
-        //                 }
-        //                 const roleDep = results.id
-        //                 const roleTitle = results.title;
-        //                 const roleSalary = parseInt(results.salary);
-        //                 const sql = "INSERT INTO empRole (title, salary, department_id) VALUES (?, ?, ?)";
-        //                 db.query(sql, roleTitle, roleSalary, roleDep, function (err, results)
-        //                 {
-        //                     if (err)
-        //                     {
-        //                         console.log(err)
-        //                     }
-        //                     console.log(results);
-        //                     cb();
-        //                 })
-        //             })
-        //         }
-        //     )
+        inquirer
+            .prompt([
+                {
+                    type: "input",
+                    message: "what is the role title?",
+                    name: "title"
+                },
+                {
+                    type: "input",
+                    message: "what is the salary of this role?",
+                    name: "salary"
+                },
+                {
+                    type: "list",
+                    message: "What department does this role belong to?",
+                    name: "depart",
+                    choices: listDep,
+                }
+            ])
+            .then(
+                (data) =>
+                {
+                    const sql = "SELECT id FROM department WHERE depName = ?"
+                    const idDep = data.depart
+                    db.query(sql, idDep, (err, results) =>
+                    {
+                        if (err)
+                        {
+                            console.log(err);
+                        }
+                        // console.log(results[0].id);
+                        // console.log(data.salary)
+                        // console.log(data.title)
+                        const roleTitle = data.title;
+                        const roleSalary = parseInt(data.salary);
+                        const roleDep = results[0].id;
+                        const roleSql = "INSERT INTO empRole (title, salary, department_id) VALUES (?, ?, ?)";
+                        db.query(roleSql, [roleTitle, roleSalary, roleDep], (err, finish) =>
+                        {
+                            if (err)
+                            {
+                                console.log(err)
+                            }
+                            //console.log(finish);
+                            cb();
+                        })
+                    })
+                }
+            )
     })
 };
 module.exports = { allRoles, newRole }

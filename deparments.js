@@ -36,7 +36,7 @@ function newDep(db, cb)
                     {
                         console.log(err)
                     }
-                    console.log(results);
+                    //console.log(results);
                     cb();
                 })
             }

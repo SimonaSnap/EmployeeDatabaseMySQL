@@ -20,7 +20,7 @@ function allEmployees(db, cb)
         {
             console.log(err)
         }
-        console.table(results);
+        //console.table(results);
         cb();
     })
 };
