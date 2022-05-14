@@ -79,7 +79,6 @@ function newEmp(db, cb)
                 message: "Who is this employee's manager? ",
                 name: "manager",
                 choices: listEmp
-
             }
         ])
         .then((data) =>
