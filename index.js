@@ -1,12 +1,14 @@
 const inquirer = require('inquirer');
 const mysql2 = require("mysql2");
 require("console.table");
-const { viewDep, newDep } = require("./deparments")
-const { allEmployees, newEmp } = require("./employees")
-const { allRoles, newRole, updateRole } = require("./roles")
+const { viewDep, newDep } = require("./scripts/deparments")
+const { allEmployees, newEmp } = require("./scripts/employees")
+const { allRoles, newRole, updateRole } = require("./scripts/roles")
 require("dotenv").config()
+//requiring all of the things used in this file
+//the consts on lines 4, 5, 6 are all functions that do the individual action items that are in the menu
+//i wrote the functions on different files for clarity reasons
 
-//console.table([{ name: "andrew", age: "26" }, { name: "simona", age: "23" }])
 const topMenu = [{
     type: "list",
     message: "What would you like to do? ",
@@ -22,6 +24,7 @@ const topMenu = [{
         "Done"
     ]
 }];
+//a list prompt that will be inserted to the menu inquirer and this is what will be the backbone of the application
 
 const db = mysql2.createConnection(
     {
@@ -34,6 +37,8 @@ const db = mysql2.createConnection(
     //console.log("Connected to company_db database")
     menu()
 );
+//this sets up the connection to the database/ the backend part of this application
+//this also launches the menu function once the connection has been made
 
 function menu()
 {
@@ -75,3 +80,5 @@ function menu()
             }
         })
 };
+//this is the actual inquirer launch, with each choice option connecting to a different function that would perform different actions then cb to launch the menu function again
+//the only option that doens't have the callback is Done, at that point process.exit() will take the user out of the application 
