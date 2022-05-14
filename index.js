@@ -2,7 +2,7 @@ const inquirer = require('inquirer');
 const mysql2 = require("mysql2");
 require("console.table");
 const { viewDep, newDep } = require("./deparments")
-const allEmployees = require("./employees")
+const { allEmployees, newEmp } = require("./employees")
 const { allRoles, newRole } = require("./roles")
 require("dotenv").config()
 
@@ -52,10 +52,10 @@ function menu()
             {
                 allRoles(db, menu)
             }
-            // else if (response.menu === "Add Employee")
-            // {
-            //     newDep(db, menu);
-            // }
+            else if (response.menu === "Add Employee")
+            {
+                newEmp(db, menu);
+            }
             else if (response.menu === "Add Department")
             {
                 newDep(db, menu);
