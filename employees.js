@@ -98,6 +98,26 @@ function newEmp(db, cb)
 
                 if (data.manager == "None")
                 {
+                    const titleId = result[0].id;
+                    const first = data.firstName;
+                    const last = data.lastName;
+                    var manId = null;
+
+                    console.log(titleId)
+                    console.log(first)
+                    console.log(last)
+                    console.log(manId)
+
+                    const finalsql = "INSERT INTO employee (role_id, first_name, last_name, manager_id) VALUES (?, ?, ?, ?)";
+                    db.query(finalsql, [titleId, first, last, manId], (err, emp) =>
+                    {
+                        if (err)
+                        {
+                            console.log(err);
+                        }
+                        //console.log(emp);
+                        cb();
+                    })
 
                 } else
                 {
@@ -110,14 +130,24 @@ function newEmp(db, cb)
                             console.log(err)
                         }
 
-                        console.log(result[0].id)
-                        console.log(data.firstName)
-                        console.log(data.lastName)
-                        console.log(nextResults[0].id)
+                        // console.log(result[0].id)
+                        // console.log(data.firstName)
+                        // console.log(data.lastName)
+                        // console.log(nextResults[0].id)
                         const titleId = result[0].id;
                         const first = data.firstName;
                         const last = data.lastName;
                         var manId = nextResults[0].id;
+                        const finalsql = "INSERT INTO employee (role_id, first_name, last_name, manager_id) VALUES (?, ?, ?, ?)";
+                        db.query(finalsql, [titleId, first, last, manId], (err, emp) =>
+                        {
+                            if (err)
+                            {
+                                console.log(err);
+                            }
+                            //console.log(emp);
+                            cb();
+                        })
                     })
                 }
             })

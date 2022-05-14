@@ -77,7 +77,7 @@ function newRole(db, cb)
                         {
                             if (err)
                             {
-                                console.log(err)
+                                console.log(err);
                             }
                             //console.log(finish);
                             cb();
