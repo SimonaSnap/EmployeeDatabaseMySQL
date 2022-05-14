@@ -130,75 +130,79 @@ function updateRole(db, cb)
         const result2 = await selectRoleTitles();
 
         const promises = [result1, result2];
+
         try
         {
-            const results = await Promise.all(promises);
-
-            nameArr = [];
-            result1.forEach((object) =>
+            const results = await Promise.all(promises).then((data) =>
             {
-                nameArr.push(object.first_name)
-            })
-            //console.log(nameArr)
-
-            titleArr = [];
-            result2.forEach((object) =>
-            {
-                titleArr.push(object.title)
-            })
-            //console.log(titleArr)
-
-            inquirer
-                .prompt([
-                    {
-                        type: "list",
-                        message: "Whose role do you want to update? ",
-                        name: "person",
-                        choices: nameArr
-                    },
-                    {
-                        type: "list",
-                        message: "Which role would you like to assign? ",
-                        name: "newRole",
-                        choices: titleArr
-                    }
-                ])
-                .then((data) =>
+                //console.log(promises);
+                nameArr = [];
+                result1.forEach((object) =>
                 {
-                    const sql = "SELECT id from empRole WHERE title = ?";
-                    const roleName = data.newRole;
-                    db.query(sql, roleName, (err, result) =>
-                    {
-                        if (err)
+                    nameArr.push(object.first_name)
+                })
+                //console.log(nameArr)
+
+                titleArr = [];
+                result2.forEach((object) =>
+                {
+                    titleArr.push(object.title)
+                })
+                //console.log(titleArr)
+
+                inquirer
+                    .prompt([
                         {
-                            console.log(err);
+                            type: "list",
+                            message: "Whose role do you want to update? ",
+                            name: "person",
+                            choices: nameArr
+                        },
+                        {
+                            type: "list",
+                            message: "Which role would you like to assign? ",
+                            name: "newRole",
+                            choices: titleArr
                         }
-                        //console.log(result);
-                        const person = data.person;
-                        const newRole = result[0].id;
-                        const sql = `UPDATE employee SET role_id = ? WHERE first_name = ?`;
-                        db.query(sql, [newRole, person], (err, results) =>
+                    ])
+                    .then((data) =>
+                    {
+                        const sql = "SELECT id from empRole WHERE title = ?";
+                        const roleName = data.newRole;
+                        db.query(sql, roleName, (err, result) =>
                         {
                             if (err)
                             {
                                 console.log(err);
                             }
-                            //console.log(results);
-                            cb();
-                        })
+                            //console.log(result);
+                            const person = data.person;
+                            const newRole = result[0].id;
+                            const sql = `UPDATE employee SET role_id = ? WHERE first_name = ?`;
+                            db.query(sql, [newRole, person], (err, results) =>
+                            {
+                                if (err)
+                                {
+                                    console.log(err);
+                                }
+                                //console.log(results);
+                                cb();
+                            })
 
+                        })
                     })
-                })
+            })
         }
         catch (error)
         {
             console.log(error)
         }
+
     }
 
-    // console.log("before await");
+    //console.log("before await");
     followQueries();
-    // console.log("after await");
+    //console.log("after await");
 }
 
 
